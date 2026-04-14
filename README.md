@@ -45,6 +45,8 @@ export GROQ_API_KEY="your_api_key_here"
 
 ## Usage
 
+### Run from the command line
+
 Run the script with the resume and job description:
 
 ```bash
@@ -67,6 +69,16 @@ Supported formats for `-f/--input_format`:
 - `doc`
 - `docx`
 - `txt`
+
+### Run the Streamlit UI
+
+Use the Streamlit app to upload a resume, paste the job description, and click **Analyze**:
+
+```bash
+streamlit run app.py
+```
+
+Then open the URL shown in the terminal (usually `http://localhost:8501`).
 
 ## Output
 
