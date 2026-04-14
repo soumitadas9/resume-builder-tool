@@ -1,14 +1,14 @@
 # Resume Builder Tool
 
-This project is a simple resume review and rewriting tool.
+This project reviews a resume against a job description and generates missing skills plus a roadmap.
 
 ## What it does
 
 - Reads a resume file in `pdf`, `doc`, `docx`, or `txt` format.
 - Reads a job description from a `txt` file.
-- Extracts keywords and skills from both documents.
-- Identifies missing job-description skills in the resume.
-- Generates an updated resume summary locally without requiring Hugging Face model downloads.
+- Uses an LLM to identify missing job-description skills from the resume.
+- Generates an actionable roadmap for acquiring or demonstrating the missing skills.
+- Falls back to local skill extraction if the LLM response cannot be parsed.
 
 ## Files
 
@@ -18,12 +18,10 @@ This project is a simple resume review and rewriting tool.
 
 ## Setup
 
-1. Copy your resume and job description into the project folder:
+1. Copy your resume and job description into the project folder.
 
-- `resume.pdf`
+- `resume.pdf` or `resume.docx` or `resume.txt`
 - `job_description.txt`
-
-> Note: These files are included in `.gitignore` so they do not get added to the repository.
 
 2. Create and activate the virtual environment:
 
@@ -47,7 +45,7 @@ export GROQ_API_KEY="your_api_key_here"
 
 ## Usage
 
-If your resume file is named with its proper extension, the script can infer the format automatically.
+Run the script with the resume and job description:
 
 ```bash
 python main.py -i resume.pdf -j job_description.txt
@@ -70,15 +68,16 @@ Supported formats for `-f/--input_format`:
 - `docx`
 - `txt`
 
-Output files:
+## Output
 
-- `missing_skills.txt` - list of missing skills.
-- `updated_cv.txt` - generated resume text.
-- `updated_cv.pdf` - generated resume PDF when input is `resume.pdf`.
-- `updated_cv.docx` - generated resume DOCX when input is `resume.docx`.
+The script writes:
+
+- `missing_skills.txt` - list of missing skills discovered.
+- `roadmap.txt` - actionable steps to build or demonstrate the missing skills.
+- `llm_raw_output.txt` - raw LLM output when the response cannot be parsed as JSON (for debugging).
 
 ## Notes
 
-- The script requires `job_description.txt` to be a plain text file.
-- `main.py` uses Groq for LLM-based missing skill detection and resume rewriting.
-- If the LLM response cannot be parsed, `main.py` falls back to a local skill-matching extraction and resume update.
+- `job_description.txt` must be plain text.
+- `main.py` uses Groq for the LLM call and falls back to local extraction if parsing fails.
+- The script does not generate updated resume outputs anymore.
