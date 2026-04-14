@@ -5,7 +5,7 @@ import re
 from docx import Document
 from docx2txt import process
 from groq import Groq
-import fitz
+from PyPDF2 import PdfReader
 
 SKILL_KEYWORDS = {
     'python', 'pytorch', 'tensorflow', 'numpy', 'pandas', 'scikit-learn', 'scikit', 'spark', 'hadoop', 'sql',
@@ -173,11 +173,11 @@ def llm_generate_missing_skills_and_roadmap(resume, job_description):
 def parse_pdf_file(filename):
     """Parse a PDF file to plain text."""
     text_parts = []
-    with fitz.open(filename) as doc:
-        for page in doc:
-            text = page.get_text()
-            if text:
-                text_parts.append(text)
+    reader = PdfReader(filename)
+    for page in reader.pages:
+        text = page.extract_text() or ''
+        if text:
+            text_parts.append(text)
     return '\n'.join(text_parts)
 
 
@@ -200,6 +200,11 @@ def parse_txt_file(filename):
 
 def get_page_size_from_pdf(pdf_path):
     """Return the width and height of the first page in the PDF."""
+    try:
+        import fitz
+    except ImportError as exc:
+        raise RuntimeError('PyMuPDF is required for PDF page size support.') from exc
+
     with fitz.open(pdf_path) as doc:
         page = doc[0]
         rect = page.rect
@@ -226,6 +231,11 @@ def wrap_text(text, font, fontsize, max_width):
 
 def save_text_as_pdf(text, output_path, template_pdf=None):
     """Save text to a PDF; if template_pdf is provided, use its page size."""
+    try:
+        import fitz
+    except ImportError as exc:
+        raise RuntimeError('PyMuPDF is required to save text as PDF.') from exc
+
     if template_pdf and os.path.exists(template_pdf):
         page_width, page_height = get_page_size_from_pdf(template_pdf)
     else:
