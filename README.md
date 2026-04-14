@@ -28,7 +28,7 @@ This project is a simple resume review and rewriting tool.
 2. Create and activate the virtual environment:
 
 ```bash
-cd '/Users/moue/Documents/GenAI projects/resume-builder-tool'
+cd '/Users/<yourproject folder>/resume-builder-tool'
 python3 -m venv .venv
 source .venv/bin/activate
 ```
